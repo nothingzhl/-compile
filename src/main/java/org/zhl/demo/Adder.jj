@@ -1,0 +1,50 @@
+options {
+    STATIC = false;
+    DEBUG_PARSER = true;
+    UNICODE_INPUT = true;
+    JDK_VERSION = "1.8";
+}
+
+PARSER_BEGIN(Adder)
+package org.zhl.demo;
+import java.io.*;
+class Adder {
+
+    public static void main(String[] args){
+      for (String arg : args) {
+          try{
+              System.out.println(evaluate(arg));
+          }catch (Exception e){
+              System.out.println(e.getMessage());
+          }
+      }
+    }
+
+    public static long evaluate(String src) throws ParseException ,Exception{
+        Reader reader = new StringReader(src);
+        return new Adder(reader).expr();
+    }
+
+
+
+}
+PARSER_END(Adder)
+
+SKIP : {
+    <[" ","\t","\r","\n"]>
+}
+
+TOKEN : {
+    <INTERGER:(["0"-"9"])+>
+}
+
+long expr():
+{
+    Token x,y;
+}
+{
+    x=<INTERGER> "+" y = <INTERGER> <EOF>
+    {
+        return Long.parseLong(x.image) + Long.parseLong(y.image);
+    }
+}

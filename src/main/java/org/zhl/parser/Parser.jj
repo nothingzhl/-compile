@@ -1,0 +1,98 @@
+// 保留字
+TOKEN : {
+    <VOID : "void"> |
+    <CHAR : "char">  |
+    <SHORT : "short">|
+    <INT: "int"> |
+    <LONG: "long">|
+    <STRUCT: "struct">|
+    <UNION: "union">|
+    <ENUM: "enum">|
+    <STATIC: "static">|
+    <EXTERN: "extern">|
+    <CONST: "const">|
+    <SIGNED: "signed">|
+    <UNSIGNED: "unsigned">|
+    <IF: "if">|
+    <ELSE: "else">|
+    <SWITCH: "switch">|
+    <CASE: "case">|
+    <DEFAULT_: "default">|
+    <WHILE: "while">|
+    <DO: "do">|
+    <FOR: "for">|
+    <RETURN: "return">|
+    <BREAK: "break">|
+    <CONTINUE: "continue">|
+    <GOTO: "goto">|
+    <TYPEDEF: "typedef">|
+    <IMPORT: "import">|
+    <SIZEOF : "sizeof">
+}
+
+// 标识符
+TOKEN : {
+    <IDENTIFER: ["a"-"z","A"-"Z","_"](["a"-"z","A"-"Z","_","0"-"9"])*>
+}
+
+//数值类型
+TOKEN : {
+    <INTEGER: ["1"-"9"](["1"-"9"])*("U")?("L")? |
+      "0"["x","X"](["0"-"9","a"-"f","A"-"F"])+("U")?("L")?|
+      "0"(["0"-"7"])*("U")?("L")?
+     >
+}
+
+//空白符
+SPECIAL_TOKEN : {
+    <SPACES: ([" ","\t","\n","\r","\f"])+>
+}
+
+//行注释
+SPECIAL_TOKEN : {
+    <LINE_COMMENT: "//" (~["\n","\r"])* ("\n" | "\r\n" | "\r")?>
+}
+
+
+// 块注释
+MORE : {
+    <"/*"> : IN_BLOCK_COMMENT
+}
+<IN_BLOCK_COMMENT> MORE : {
+    <~[]>
+}
+<IN_BLOCK_COMMENT> SKIP : {
+    <"*/"> :DEFAULT
+}
+
+// 字符串字面量
+MORE : {
+    <"\"">:IN_STRING
+}
+<IN_STRING> MORE : {
+    <(~["\"","\\","\n","\r"])+> |
+    <"\\"(["0"-"7"]){3}> |
+    <"\\"~[]>
+}
+
+<IN_STRING> TOKEN : {
+    <STRING: "\""> :DEFAULT
+}
+
+//字符字面量
+MORE : {
+    <"'"> : IN_CHARACTER
+}
+<IN_CHARACTER> MORE : {
+    <(~["'","\\","\n","\r"])+> |
+        <"\\"(["0"-"7"]){3}> |
+        <"\\"~[]>
+}
+<IN_CHARACTER> TOKEN : {
+    <CHARACTER: "'"> : DEFAULT
+}
+
+
+
+
+
